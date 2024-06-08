@@ -5,32 +5,33 @@ import static codigo.Tokens.*;
 %type Tokens
 L=[a-zA-Z_]+
 D=[0-9]+
-espacio=[ ,\t,\r,\n]+
+espacio=[ ,\t,\r]+
 %{
     public String lexeme;
 %}
 %%
-programa |
-inicio |
-fin |
-variables |
-funcion |
-entero |
-si |
-entonces |
-sino |
-leer |
-escribir |
-modulo |
-while {lexeme=yytext(); return Reservadas;}
+programa {lexeme=yytext(); return Programa;}
+inicio {lexeme=yytext(); return Inicio;}
+fin {lexeme=yytext(); return Fin;}
+variables {lexeme=yytext(); return Variables;}
+funcion {lexeme=yytext(); return Funcion;}
+entero {lexeme=yytext(); return Entero;}
+si {lexeme=yytext(); return Si;}
+entonces {lexeme=yytext(); return Entonces;}
+sino {lexeme=yytext(); return Sino;}
+leer {lexeme=yytext(); return Leer;}
+escribir {lexeme=yytext(); return Escribir;}
+modulo {lexeme=yytext(); return Modulo;}
 {espacio} {/*Ignore*/}
-"\(" {return Parentesis_Abierto;}
-")" {return Parentesis_Cerrado;}
-";" {return Punto_y_Coma;}
-"," {return Coma;}
-"=" {return Igual;}
-":=" {return Asignacion;}
-":" {return Dos_Puntos;}
+"//".* {/*Ignore*/}
+"\n" {lexeme=yytext(); return Linea;}
+"," {lexeme=yytext(); return Coma;}
+"=" {lexeme=yytext(); return Igual;}
+":=" {lexeme=yytext(); return Asignacion;}
+":" {lexeme=yytext(); return Dos_Puntos;}
+"(" {lexeme=yytext(); return Parentesis_Abierto;}
+")" {lexeme=yytext(); return Parentesis_Cerrado;}
+";" {lexeme=yytext(); return Punto_y_Coma;}
 {L}({L}|{D})* {lexeme=yytext(); return Identificador;}
 ("(-"{D}+")")|{D}+ {lexeme=yytext(); return Numero;}
  . {return ERROR;}
