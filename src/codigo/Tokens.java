@@ -9,6 +9,7 @@ package codigo;
  * @author camilaailen
  */
 public enum Tokens {
+    Linea,
     Programa,
     Inicio,
     Fin,
@@ -18,10 +19,7 @@ public enum Tokens {
     Si,
     Entonces,
     Sino,
-    Leer,
-    Escribir,
     Modulo,
-    Linea,
     Coma,
     Igual,
     Asignacion,

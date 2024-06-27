@@ -7,15 +7,16 @@ import java_cup.runtime.Symbol;
 %full
 %line
 %char
+
 L=[a-zA-Z_]+
 D=[0-9]+
-espacio=[ ,\t,\r,\n]+
+espacio=[ \t\r\n]+
 %{
     private Symbol symbol (int type, Object value){
         return new Symbol (type, yyline, yycolumn, value);
     }
     private Symbol symbol (int type){
-        return new Symbol (type, yyline, yycolumn, value);
+        return new Symbol (type, yyline, yycolumn);
     }
 %}
 %%
@@ -28,11 +29,8 @@ entero {return new Symbol (sym.Entero, yychar, yyline, yytext());}
 si {return new Symbol (sym.Si, yychar, yyline, yytext());}
 entonces {return new Symbol (sym.Entonces, yychar, yyline, yytext());}
 sino {return new Symbol (sym.Sino, yychar, yyline, yytext());}
-leer {return new Symbol (sym.Leer, yychar, yyline, yytext());}
-escribir {return new Symbol (sym.Escribir, yychar, yyline, yytext());}
 modulo {return new Symbol (sym.Modulo, yychar, yyline, yytext());}
-{espacio} {/*Ignore*/}
-"//".* {/*Ignore*/}
+
 "," {return new Symbol (sym.Coma, yychar, yyline, yytext());}
 "=" {return new Symbol (sym.Igual, yychar, yyline, yytext());}
 ":=" {return new Symbol (sym.Asignacion, yychar, yyline, yytext());}
@@ -40,6 +38,11 @@ modulo {return new Symbol (sym.Modulo, yychar, yyline, yytext());}
 "(" {return new Symbol (sym.Parentesis_Abierto, yychar, yyline, yytext());}
 ")" {return new Symbol (sym.Parentesis_Cerrado, yychar, yyline, yytext());}
 ";" {return new Symbol (sym.Punto_y_Coma, yychar, yyline, yytext());}
+
+{espacio} {/*Ignore*/}
+"//".* {/*Ignore*/}
+
 {L}({L}|{D})* {return new Symbol (sym.Identificador, yychar, yyline, yytext());}
-("(-"{D}+")")|{D}+ {return new Symbol (sym.Numero, yychar, yyline, yytext());}
- . {return ERROR;}
+(-)?{D}+ {return new Symbol (sym.Numero, yychar, yyline, yytext());}
+
+ . {return new Symbol (sym.Error, yychar, yyline, yytext());}

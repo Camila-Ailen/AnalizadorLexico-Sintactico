@@ -1,0 +1,102 @@
+
+package codigo;
+
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    private Symbol s;
+
+    public void syntax_error(Symbol s) {
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+    }
+:};
+
+
+terminal Programa, Inicio, Fin, Variables, Funcion, Entero, Si, Entonces, 
+    Sino, Modulo, Coma, Igual, Asignacion, Dos_Puntos,
+    Parentesis_Abierto, Parentesis_Cerrado, Punto_y_Coma, Identificador, Numero;
+
+non terminal PROGRAMA, LLAMADA_FUNCION, LISTA_IDENTIFICADORES, DECLARACIONES,
+    TIPO, DECLARACIONES_PROCESOS, PROCESO, ENCABEZADO_PROCESO, ARGUMENTOS,
+    LISTA_PARAMETROS, CUERPO, LISTA_PROPOSICIONES, PROPOSICION,
+    PROPOSICION_PROCEDIMIENTO, LISTA_EXPRESIONES, EXPRESION, FACTOR, OPERACION;
+
+
+start with PROGRAMA;
+
+PROGRAMA ::= Programa LLAMADA_FUNCION Punto_y_Coma DECLARACIONES DECLARACIONES_PROCESOS CUERPO
+;
+
+LLAMADA_FUNCION ::= Identificador Parentesis_Abierto LISTA_IDENTIFICADORES Parentesis_Cerrado
+;
+
+LISTA_IDENTIFICADORES ::= Identificador
+    | LISTA_IDENTIFICADORES Coma Identificador
+;
+
+DECLARACIONES ::= DECLARACIONES Variables LISTA_IDENTIFICADORES Dos_Puntos TIPO Punto_y_Coma
+    | /* vacio */
+;    
+
+TIPO ::= Entero
+;
+
+DECLARACIONES_PROCESOS ::= DECLARACIONES_PROCESOS PROCESO Punto_y_Coma
+    | /* vacio */
+;
+
+PROCESO ::= ENCABEZADO_PROCESO DECLARACIONES CUERPO
+;
+
+ENCABEZADO_PROCESO ::= Funcion Identificador ARGUMENTOS Dos_Puntos TIPO Punto_y_Coma
+;
+
+ARGUMENTOS ::= Parentesis_Abierto LISTA_PARAMETROS Parentesis_Cerrado
+    | /* vacio */
+;
+
+LISTA_PARAMETROS ::= LISTA_IDENTIFICADORES Dos_Puntos TIPO
+    | LISTA_PARAMETROS Punto_y_Coma LISTA_IDENTIFICADORES Dos_Puntos TIPO
+;
+
+CUERPO ::= Inicio LISTA_PROPOSICIONES Fin
+;
+
+LISTA_PROPOSICIONES ::= PROPOSICION
+    | LISTA_PROPOSICIONES Punto_y_Coma PROPOSICION
+;
+
+PROPOSICION ::= Identificador Asignacion EXPRESION
+    | PROPOSICION_PROCEDIMIENTO
+    | CUERPO
+    | Si EXPRESION Entonces PROPOSICION Sino PROPOSICION
+;
+
+PROPOSICION_PROCEDIMIENTO ::= Identificador
+    | Identificador Parentesis_Abierto LISTA_EXPRESIONES Parentesis_Cerrado
+;
+
+LISTA_EXPRESIONES ::= EXPRESION
+    | LISTA_EXPRESIONES Coma EXPRESION
+;
+
+EXPRESION ::= FACTOR
+    | FACTOR Igual FACTOR
+    | FACTOR OPERACION FACTOR
+;
+
+FACTOR ::= Identificador
+    | Identificador Parentesis_Abierto LISTA_EXPRESIONES Parentesis_Cerrado
+    | Numero
+;
+
+OPERACION ::= Modulo
+;
+
+
+
